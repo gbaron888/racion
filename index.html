@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Меню на 31 день с рецептами и списком покупок</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            background: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .tab-btn:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .tab-btn.active {
+            background: #667eea;
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .tab-content {
+            display: none;
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .day-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 2px solid #e0e0e0;
+        }
+
+        .day-header {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 15px;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .meal-period {
+            margin-bottom: 15px;
+            padding: 12px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .meal-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .meal-select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 1em;
+            cursor: pointer;
+            background: white;
+        }
+
+        .meal-select:hover {
+            border-color: #667eea;
+        }
+
+        .recipe-icon {
+            cursor: pointer;
+            font-size: 1.2em;
+            color: #667eea;
+            transition: transform 0.2s;
+        }
+
+        .recipe-icon:hover {
+            transform: scale(1.2);
+        }
+
+        .ingredients-list, .shopping-list {
+            margin-top: 20px;
+        }
+
+        .list-header {
+            font-size: 1.5em;
+            color: #667eea;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .ingredient-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            transition: all 0.3s;
+            border-left: 4px solid #667eea;
+        }
+
+        .ingredient-item.checked {
+            background: #e8f5e9;
+            border-left-color: #4caf50;
+            text-decoration: line-through;
+            color: #888;
+        }
+
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .btn-warning:hover {
+            background: #e0a800;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .modal-title {
+            font-size: 1.8em;
+            color: #667eea;
+        }
+
+        .close-modal {
+            font-size: 2em;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s;
+        }
+
+        .close-modal:hover {
+            color: #333;
+        }
+
+        .recipe-header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .recipe-header h2 {
+            font-size: 2em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .cuisine-tag {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        .recipe-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 25px;
+        }
+
+        .recipe-section h3 {
+            font-size: 1.4em;
+            color: #667eea;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .ingredient-grid {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .ingredient-grid .qty {
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .ingredient-grid .name {
+            color: #333;
+        }
+
+        .steps ol {
+            padding-left: 25px;
+            line-height: 1.8;
+        }
+
+        .steps li {
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        .recipe-tips {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .recipe-tips h3 {
+            color: #ffc107;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .recipe-tips p {
+            margin-bottom: 10px;
+            line-height: 1.6;
+            color: #666;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        .recipe-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .recipe-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+
+        .ingredient-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .add-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .add-btn:hover {
+            background: #218838;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 768px) {
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .recipe-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📅 Меню на 31 день</h1>
+            <p class="subtitle">Планируйте питание заранее с рецептами и автоматическим списком покупок</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="menu">📋 Меню на месяц</button>
+            <button class="tab-btn" data-tab="ingredients">🥗 Ингредиенты по дням</button>
+            <button class="tab-btn" data-tab="shopping">🛒 Список покупок</button>
+            <button class="tab-btn" data-tab="add-recipe">✨ Добавить рецепт</button>
+        </div>
+
+        <div id="menu-tab" class="tab-content active">
+            <div class="controls">
+                <button class="btn" aria-label="Заполнить случайно" onclick="app.generateRandomMenu()">🎲 Заполнить случайно</button>
+                <button class="btn btn-success" aria-label="Сохранить меню" onclick="app.saveMenu()">💾 Сохранить меню</button>
+                <button class="btn btn-danger" aria-label="Сбросить меню" onclick="app.resetMenu()">🗑️ Сбросить меню</button>
+                <button class="btn btn-warning" aria-label="Посмотреть список покупок" onclick="app.viewShoppingList()">🛒 Посмотреть список покупок</button>
+            </div>
+            <div class="menu-grid" id="menuGrid">
+                <!-- Меню будет сгенерировано JavaScript -->
+            </div>
+        </div>
+
+        <div id="ingredients-tab" class="tab-content">
+            <h2 class="list-header">🥗 Ингредиенты по дням</h2>
+            <div id="ingredientsList">
+                <div style="text-align: center; padding: 40px; color: #999;">
+                    Выберите блюда в меню, чтобы увидеть ингредиенты
+                </div>
+            </div>
+        </div>
+
+        <div id="shopping-tab" class="tab-content">
+            <h2 class="list-header">🛒 Список покупок</h2>
+            <div class="controls">
+                <button class="btn btn-success" aria-label="Скачать список покупок" onclick="app.downloadShoppingList()">📥 Скачать список</button>
+                <button class="btn btn-danger" aria-label="Очистить список покупок" onclick="app.clearShoppingList()">🗑️ Очистить всё</button>
+                <button class="btn" aria-label="Вернуться к меню" onclick="app.switchToMenu()">📋 Вернуться к меню</button>
+            </div>
+            <div id="shoppingList">
+                <div style="text-align: center; padding: 40px; color: #999;">
+                    Выберите блюда, чтобы сформировать список покупок
+                </div>
+            </div>
+        </div>
+
+        <div id="add-recipe-tab" class="tab-content">
+            <h2 class="list-header">✨ Добавить свой рецепт</h2>
+            <form id="addRecipeForm">
+                <div class="form-group">
+                    <label for="recipeName">Название блюда *</label>
+                    <input type="text" id="recipeName" class="recipe-input" placeholder="Например: Борщ по-домашнему" required>
+                </div>
+                <div class="form-group">
+                    <label for="recipeCategory">Тип блюда *</label>
+                    <select id="recipeCategory" class="recipe-input" onchange="ui.updateSubcategories()" required>
+                        <option value="">Выберите тип блюда...</option>
+                        <option value="Завтраки">Завтраки</option>
+                        <option value="Первые блюда">Первые блюда</option>
+                        <option value="Вторые блюда">Вторые блюда</option>
+                        <option value="Салаты">Салаты</option>
+                        <option value="Ужин основное">Ужин основное</option>
+                        <option value="Ужин гарниры">Ужин гарниры</option>
+                        <option value="Ужин десерты">Ужин десерты</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="recipeSubcategory">Подкатегория *</label>
+                    <select id="recipeSubcategory" class="recipe-input" required>
+                        <option value="">Сначала выберите тип блюда...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="recipeCuisine">Кухня (страна)</label>
+                    <input type="text" id="recipeCuisine" class="recipe-input" placeholder="Например: Русская, Итальянская">
+                </div>
+                <div class="form-group">
+                    <label>Ингредиенты *</label>
+                    <div id="ingredientsContainer">
+                        <div class="ingredient-row">
+                            <input type="text" placeholder="Количество" class="ingredient-qty" style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 4px;" required>
+                            <input type="text" placeholder="Название ингредиента" class="ingredient-name" style="flex: 2; padding: 8px; border: 1px solid #ddd; border-radius: 4px;" required>
+                        </div>
+                    </div>
+                    <button type="button" class="add-btn" onclick="ui.addIngredientField()">
+                        <span>+</span> Добавить ингредиент
+                    </button>
+                </div>
+                <div class="form-group">
+                    <label>Шаги приготовления *</label>
+                    <div id="stepsContainer">
+                        <textarea class="recipe-input step-textarea" placeholder="Шаг 1: Описание действия..." rows="3" required></textarea>
+                    </div>
+                    <button type="button" class="add-btn" onclick="ui.addStepField()">
+                        <span>+</span> Добавить шаг
+                    </button>
+                </div>
+                <div class="form-group">
+                    <label for="recipeTips">Советы шеф-повара</label>
+                    <textarea id="recipeTips" class="recipe-input" placeholder="Дополнительные советы по приготовлению..." rows="3"></textarea>
+                </div>
+                <button class="btn btn-success" type="button" onclick="app.saveCustomRecipe()">✅ Сохранить рецепт</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Модальное окно рецепта -->
+    <div id="recipeModal" class="modal" role="dialog" aria-modal="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="modalRecipeTitle">📖 Рецепт</div>
+                <button class="close-modal" onclick="ui.closeRecipeModal()" aria-label="Закрыть модальное окно">&times;</button>
+            </div>
+            <div id="recipeContent">
+                <!-- Рецепт будет загружен сюда -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
+
+    <script>
+        // Настройки Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDoN4jRhnNNH5NTHuyHrU44tEyNNyJUv58",
+            authDomain: "racion-bb.firebaseapp.com",
+            projectId: "racion-bb",
+            storageBucket: "racion-bb.appspot.com",
+            messagingSenderId: "649664299148",
+            appId: "1:649664299148:web:5c7fd0b25f9f153a123ba9"
+        };
+
+        // Инициализация Firebase
+        firebase.initializeApp(firebaseConfig);
+        
+        // Глобальные переменные для сервисов Firebase
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+        const storage = firebase.storage();
+    </script>
+
+    <!-- Подключение локальных скриптов ПОСЛЕ инициализации Firebase -->
+    <script src="database.js" defer></script>
+    <script src="utils.js" defer></script>
+    <script src="ui.js" defer></script>
+    <script src="app.js" defer></script>
+    <script defer>
+        // Инициализация приложения при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof app !== 'undefined' && typeof app.init === 'function') {
+                app.init();
+                app.initTabs();
+                app.initModalClose();
+            }
+        });
+    </script>
+
+</body>
+</html>
