@@ -12,25 +12,19 @@
 </head>
 <body>
     <div class="container">
-        <!-- Заголовок -->
         <h1>🍽️ Меню на 31 день с рецептами и списком покупок</h1>
         
-        <!-- Вкладки -->
         <div class="tabs">
             <button class="tab-btn active" data-tab="menu">📋 Меню</button>
             <button class="tab-btn" data-tab="shopping">🛒 Список покупок</button>
         </div>
 
-        <!-- ============================================
-             ВКЛАДКА МЕНЮ
-             ============================================ -->
+        <!-- Вкладка Меню -->
         <div class="tab-content active" id="menu-tab">
-            <!-- Сетка дней -->
             <div class="menu-grid" id="menuGrid">
-                <!-- Дни будут генерироваться динамически через JavaScript -->
+                <!-- Дни будут генерироваться динамически -->
             </div>
-            
-            <!-- Панель управления -->
+
             <div class="controls">
                 <button class="btn btn-secondary" onclick="resetMenu()">🔄 Сбросить меню</button>
                 <button class="btn btn-warning" onclick="viewShoppingList()">📋 Посмотреть список покупок</button>
@@ -40,39 +34,27 @@
             </div>
         </div>
 
-        <!-- ============================================
-             ВКЛАДКА СПИСОК ПОКУПОК
-             ============================================ -->
+        <!-- Вкладка Список покупок -->
         <div class="tab-content" id="shopping-tab">
-            <!-- Контейнер с двумя секциями -->
             <div class="shopping-list-container">
-                <!-- Ингредиенты по выбранным блюдам -->
                 <div class="shopping-section">
                     <h2>📋 Ингредиенты по выбранным блюдам</h2>
                     <div class="ingredient-list" id="ingredientsList">
-                        <p style="text-align: center; color: #6c757d; padding: 40px 0;">
-                            Выберите блюда в меню, чтобы увидеть ингредиенты
-                        </p>
+                        <p style="text-align: center; color: #6c757d;">Выберите блюда в меню, чтобы увидеть ингредиенты</p>
                     </div>
                 </div>
-                
-                <!-- Общий список покупок -->
+
                 <div class="shopping-section">
                     <h2>🛒 Общий список покупок</h2>
                     <div class="ingredient-list" id="shoppingList">
-                        <p style="text-align: center; color: #6c757d; padding: 40px 0;">
-                            Выберите блюда, чтобы сформировать список покупок
-                        </p>
+                        <p style="text-align: center; color: #6c757d;">Выберите блюда, чтобы сформировать список покупок</p>
                     </div>
                     <div style="margin-top: 20px; text-align: center;">
-                        <button class="btn btn-success" onclick="downloadShoppingList()" style="width: 100%; padding: 12px; font-size: 1.1em;">
-                            💾 Скачать список покупок
-                        </button>
+                        <button class="btn btn-success" onclick="downloadShoppingList()" style="width: 100%;">💾 Скачать список покупок</button>
                     </div>
                 </div>
             </div>
-            
-            <!-- Панель управления списком покупок -->
+
             <div class="controls">
                 <button class="btn btn-secondary" onclick="clearShoppingList()">🗑️ Очистить список</button>
                 <button class="btn btn-primary" onclick="switchToMenu()">← Вернуться к меню</button>
@@ -80,139 +62,85 @@
         </div>
     </div>
 
-    <!-- ============================================
-         МОДАЛЬНОЕ ОКНО РЕЦЕПТА
-         ============================================ -->
+    <!-- Модальное окно рецепта -->
     <div class="recipe-modal" id="recipeModal">
         <div class="recipe-content">
             <button class="close-modal" onclick="closeRecipeModal()">×</button>
             <div id="recipeContent">
-                <!-- Контент рецепта будет загружаться динамически -->
+                <!-- Рецепт будет загружаться сюда -->
             </div>
         </div>
     </div>
 
-    <!-- ============================================
-         МОДАЛЬНОЕ ОКНО ДОБАВЛЕНИЯ РЕЦЕПТА
-         ============================================ -->
+    <!-- Модальное окно добавления рецепта -->
     <div class="recipe-modal" id="addRecipeModal">
         <div class="recipe-content" style="max-width: 800px;">
             <button class="close-modal" onclick="closeAddRecipeModal()">×</button>
+            <h2 style="text-align: center; color: #667eea; margin-bottom: 20px;">Добавить свой рецепт</h2>
             
-            <!-- Заголовок формы -->
-            <h2 style="text-align: center; color: #667eea; margin-bottom: 20px;">
-                ➕ Добавить свой рецепт
-            </h2>
-            
-            <!-- Форма добавления рецепта -->
-            <form id="addRecipeForm" onsubmit="event.preventDefault(); saveCustomRecipe();">
-                
-                <!-- Название и тип блюда -->
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
-                    <div>
-                        <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #495057;">
-                            📝 Название блюда:
-                        </label>
-                        <input type="text" id="recipeName" class="recipe-input" 
-                               placeholder="Например: Омлет с грибами" required>
-                    </div>
-                    <div>
-                        <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #495057;">
-                            🍽️ Тип блюда:
-                        </label>
-                        <select id="recipeCategory" class="recipe-input" 
-                                onchange="updateSubcategories()" required>
-                            <option value="">Выберите тип...</option>
-                            <option value="Завтраки">Завтрак</option>
-                            <option value="Первые блюда">Первое блюдо</option>
-                            <option value="Вторые блюда">Второе блюдо</option>
-                            <option value="Салаты">Салат</option>
-                            <option value="Ужин основное">Основное блюдо</option>
-                            <option value="Ужин гарниры">Гарнир</option>
-                            <option value="Ужин десерты">Десерт/напиток</option>
-                        </select>
-                    </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                <div>
+                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">Название блюда:</label>
+                    <input type="text" id="recipeName" class="recipe-input" placeholder="Например: Омлет с грибами">
                 </div>
-                
-                <!-- Подкатегория -->
-                <div style="margin-bottom: 15px;">
-                    <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #495057;">
-                        📂 Подкатегория:
-                    </label>
-                    <select id="recipeSubcategory" class="recipe-input" required>
-                        <option value="">Сначала выберите тип блюда...</option>
+                <div>
+                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">Тип блюда:</label>
+                    <select id="recipeCategory" class="recipe-input" onchange="updateSubcategories()">
+                        <option value="">Выберите тип...</option>
+                        <option value="Завтраки">Завтрак</option>
+                        <option value="Первые блюда">Первое блюдо</option>
+                        <option value="Вторые блюда">Второе блюдо</option>                        
+                        <option value="Салаты">Салат</option>
+                        <option value="Ужин основное">Основное блюдо</option>
+                        <option value="Ужин гарниры">Гарнир</option>
+                        <option value="Ужин десерты">Десерт</option>
                     </select>
                 </div>
-                
-                <!-- Кухня -->
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #495057;">
-                        🌍 Кухня:
-                    </label>
-                    <input type="text" id="recipeCuisine" class="recipe-input" 
-                           placeholder="Русская, Итальянская, Домашняя..." 
-                           value="Домашняя">
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: bold;">Подкатегория:</label>
+                <select id="recipeSubcategory" class="recipe-input">
+                    <option value="">Сначала выберите тип блюда...</option>
+                </select>
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: bold;">Кухня:</label>
+                <input type="text" id="recipeCuisine" class="recipe-input" placeholder="Русская, Итальянская, Домашняя...">
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <label style="font-weight: bold;">Ингредиенты:</label>
+                    <button class="btn btn-secondary" style="padding: 5px 10px; font-size: 0.9em;" onclick="addIngredientField()">➕ Добавить</button>
                 </div>
-                
-                <!-- Ингредиенты -->
-                <div style="margin-bottom: 25px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                        <label style="font-weight: bold; color: #495057;">
-                            🥘 Ингредиенты:
-                        </label>
-                        <button type="button" class="btn btn-secondary" 
-                                style="padding: 5px 10px; font-size: 0.9em;" 
-                                onclick="addIngredientField()">
-                            ➕ Добавить ингредиент
-                        </button>
-                    </div>
-                    <div id="ingredientsContainer">
-                        <div class="ingredient-row" style="display: flex; gap: 10px; margin-bottom: 8px;">
-                            <input type="text" placeholder="Количество" 
-                                   style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-                            <input type="text" placeholder="Название ингредиента" 
-                                   style="flex: 2; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-                        </div>
+                <div id="ingredientsContainer">
+                    <div class="ingredient-row" style="display: flex; gap: 10px; margin-bottom: 8px;">
+                        <input type="text" placeholder="Количество" style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                        <input type="text" placeholder="Название ингредиента" style="flex: 2; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
                     </div>
                 </div>
-                
-                <!-- Шаги приготовления -->
-                <div style="margin-bottom: 25px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                        <label style="font-weight: bold; color: #495057;">
-                            👩‍🍳 Шаги приготовления:
-                        </label>
-                        <button type="button" class="btn btn-secondary" 
-                                style="padding: 5px 10px; font-size: 0.9em;" 
-                                onclick="addStepField()">
-                            ➕ Добавить шаг
-                        </button>
-                    </div>
-                    <div id="stepsContainer">
-                        <textarea class="recipe-input" 
-                                  placeholder="Шаг 1: Описание действия..." 
-                                  rows="3" style="margin-bottom: 8px;"></textarea>
-                    </div>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <label style="font-weight: bold;">Шаги приготовления:</label>
+                    <button class="btn btn-secondary" style="padding: 5px 10px; font-size: 0.9em;" onclick="addStepField()">➕ Добавить</button>
                 </div>
-                
-                <!-- Советы шеф-повара -->
-                <div style="margin-bottom: 25px;">
-                    <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #495057;">
-                        💡 Советы шеф-повара (опционально):
-                    </label>
-                    <textarea id="recipeTips" class="recipe-input" 
-                              placeholder="Например: Для нежного омлета не пережаривайте яйца" 
-                              rows="2"></textarea>
+                <div id="stepsContainer">
+                    <textarea class="recipe-input" placeholder="Шаг 1: Описание действия..." rows="3" style="margin-bottom: 8px;"></textarea>
                 </div>
-                
-                <!-- Кнопка сохранения -->
-                <div style="text-align: center;">
-                    <button type="submit" class="btn btn-success" 
-                            style="width: 100%; padding: 14px; font-size: 1.1em;">
-                        ✅ Сохранить рецепт
-                    </button>
-                </div>
-            </form>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: bold;">Советы шеф-повара (опционально):</label>
+                <textarea id="recipeTips" class="recipe-input" placeholder="Например: Для нежного омлета не пережаривайте яйца" rows="2"></textarea>
+            </div>
+            
+            <div style="text-align: center;">
+                <button class="btn btn-success" onclick="saveCustomRecipe()" style="width: 100%; padding: 14px; font-size: 1.1em;">✅ Сохранить рецепт</button>
+            </div>
         </div>
     </div>
 
