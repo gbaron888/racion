@@ -606,58 +606,44 @@
 
     <!-- Модальные окна остаются вне контейнера -->
     <!-- Модальное окно: Рецепт -->
-    <div class="recipe-modal" id="recipeModal">
-        <div class="recipe-content">
-            <button class="close-modal" onclick="closeRecipeModal()" aria-label="Закрыть">
-                <span style="font-size: 2em; line-height: 1;">×</span>
-            </button>
-            <div id="recipeContent">
-                <div style="text-align: center; padding: 60px 20px; color: #6c757d;">
-                    <div style="font-size: 3em; margin-bottom: 20px;">📖</div>
-                    <p>Выберите блюдо, чтобы посмотреть рецепт</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Модальное окно: Добавление рецепта -->
     <div class="recipe-modal" id="addRecipeModal">
-        <div class="recipe-content" style="max-width: 850px;">
-            <button class="close-modal" onclick="closeAddRecipeModal()" aria-label="Закрыть">
-                <span style="font-size: 2em; line-height: 1;">×</span>
-            </button>
-            
-            <div class="add-recipe-form">
-                <h2 style="text-align: center; color: #667eea; margin-bottom: 30px; border-bottom: 3px solid #e9ecef; padding-bottom: 20px;">
-                    <span style="margin-right: 10px;">➕</span>
-                    Добавить свой рецепт
-                </h2>
+    <div class="recipe-content" style="max-width: 850px;">
+        <button class="close-modal" onclick="closeAddRecipeModal()" aria-label="Закрыть">
+            <span style="font-size: 2em; line-height: 1;">×</span>
+        </button>
 
-                <!-- Основная информация -->
+        <div class="add-recipe-form">
+            <h2 style="text-align: center; color: #667eea; margin-bottom: 30px; border-bottom: 3px solid #e9ecef; padding-bottom: 20px;">
+                <span style="margin-right: 10px;">📧</span>
+                Отправить рецепт на рассмотрение
+            </h2>
+
+            <!-- Форма отправки по email -->
+            <form action="mailto:your-email@example.com" method="post" enctype="text/plain" target="_blank" onsubmit="return confirmSubmission()">
+                <input type="hidden" name="subject" value="Новый рецепт для сайта Меню на 31 день">
+
                 <div class="form-section">
                     <h3 style="color: #667eea; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #e9ecef;">
                         📝 Основная информация
                     </h3>
-                    
+
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px;">
                         <div class="form-group">
                             <label class="form-label">
                                 <span style="margin-right: 5px;">🍽️</span>
                                 Название блюда:
                             </label>
-                            <input type="text" id="recipeName" class="recipe-input" 
-                                   placeholder="Например: Омлет с грибами" 
-                                   aria-label="Название блюда">
+                            <input type="text" name="recipe_name" class="recipe-input"
+                                   placeholder="Например: Омлет с грибами"
+                                   required>
                         </div>
-                        
+
                         <div class="form-group">
                             <label class="form-label">
                                 <span style="margin-right: 5px;">🏷️</span>
                                 Тип блюда:
                             </label>
-                            <select id="recipeCategory" class="recipe-input" 
-                                    onchange="updateSubcategories()" 
-                                    aria-label="Тип блюда">
+                            <select name="recipe_category" class="recipe-input" required>
                                 <option value="">Выберите тип...</option>
                                 <option value="Завтраки">Завтрак</option>
                                 <option value="Первые блюда">Первое блюдо</option>
@@ -673,22 +659,20 @@
                     <div class="form-group" style="margin-bottom: 15px;">
                         <label class="form-label">
                             <span style="margin-right: 5px;">📎</span>
-                            Подкатегория:
+                            Подкатегория (опционально):
                         </label>
-                        <select id="recipeSubcategory" class="recipe-input" aria-label="Подкатегория">
-                            <option value="">Сначала выберите тип блюда...</option>
-                        </select>
+                        <input type="text" name="recipe_subcategory" class="recipe-input"
+                               placeholder="Например: Яичные, Мясные...">
                     </div>
 
                     <div class="form-group" style="margin-bottom: 25px;">
                         <label class="form-label">
                             <span style="margin-right: 5px;">🌍</span>
-                            Кухня:
+                            Кухня (опционально):
                         </label>
-                        <input type="text" id="recipeCuisine" class="recipe-input" 
-                               placeholder="Русская, Итальянская, Домашняя..." 
-                               value="Домашняя"
-                               aria-label="Кухня">
+                        <input type="text" name="recipe_cuisine" class="recipe-input"
+                               placeholder="Русская, Итальянская, Домашняя..."
+                               value="Домашняя">
                     </div>
                 </div>
 
@@ -699,22 +683,20 @@
                             <span style="margin-right: 10px;">📋</span>
                             Ингредиенты
                         </h3>
-                        <button class="btn btn-secondary btn-sm" onclick="addIngredientField()" style="padding: 6px 12px;">
-                            <span style="margin-right: 5px;">➕</span>
-                            Добавить ингредиент
-                        </button>
                     </div>
-                    
+
                     <div id="ingredientsContainer">
                         <div class="ingredient-row" style="display: flex; gap: 10px; margin-bottom: 12px;">
-                            <input type="text" placeholder="Количество" 
-                                   style="flex: 1; padding: 10px; border: 2px solid #ddd; border-radius: 6px; font-size: 1em;"
-                                   aria-label="Количество ингредиента">
-                            <input type="text" placeholder="Название ингредиента" 
-                                   style="flex: 2; padding: 10px; border: 2px solid #ddd; border-radius: 6px; font-size: 1em;"
-                                   aria-label="Название ингредиента">
+                            <input type="text" name="ingredients" class="recipe-input"
+                                   placeholder="Количество и название ингредиента (например: 2 яйца, 100г грибов)"
+                                   required>
                         </div>
                     </div>
+                    <!-- Кнопка для добавления новых полей (опционально, но требует JS) -->
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="addIngredientFieldToForm()" style="padding: 6px 12px; margin-top: 10px;">
+                        <span style="margin-right: 5px;">➕</span>
+                        Добавить ещё ингредиент
+                    </button>
                 </div>
 
                 <!-- Шаги приготовления -->
@@ -724,18 +706,15 @@
                             <span style="margin-right: 10px;">👩‍🍳</span>
                             Шаги приготовления
                         </h3>
-                        <button class="btn btn-secondary btn-sm" onclick="addStepField()" style="padding: 6px 12px;">
-                            <span style="margin-right: 5px;">➕</span>
-                            Добавить шаг
-                        </button>
                     </div>
-                    
+
                     <div id="stepsContainer">
-                        <textarea class="recipe-input" 
-                                  placeholder="Шаг 1: Описание действия..." 
-                                  rows="3" 
-                                  style="margin-bottom: 12px;"
-                                  aria-label="Шаг приготовления"></textarea>
+                        <textarea name="recipe_steps" class="recipe-input"
+                                  placeholder="Шаг 1: Описание действия...
+Шаг 2: ...
+Шаг 3: ..."
+                                  rows="5"
+                                  required></textarea>
                     </div>
                 </div>
 
@@ -745,25 +724,25 @@
                         <span style="margin-right: 10px;">💡</span>
                         Советы шеф-повара (опционально)
                     </h3>
-                    <textarea id="recipeTips" class="recipe-input" 
-                              placeholder="Например: Для нежного омлета не пережаривайте яйца. Или: Добавьте специи в конце готовки для более яркого вкуса." 
-                              rows="3"
-                              aria-label="Советы"></textarea>
+                    <textarea name="recipe_tips" class="recipe-input"
+                              placeholder="Например: Для нежного омлета не пережаривайте яйца."
+                              rows="3"></textarea>
                 </div>
 
-                <!-- Кнопка сохранения -->
+                <!-- Кнопка отправки -->
                 <div style="margin-top: 30px; text-align: center; padding-top: 20px; border-top: 2px solid #e9ecef;">
-                    <button class="btn btn-success btn-lg" onclick="saveCustomRecipe()" style="width: 100%; padding: 16px; font-size: 1.2em;">
-                        <span style="margin-right: 10px;">✅</span>
-                        Сохранить рецепт
+                    <button type="submit" class="btn btn-success btn-lg" style="width: 100%; padding: 16px; font-size: 1.2em;">
+                        <span style="margin-right: 10px;">📧</span>
+                        Отправить рецепт на рассмотрение
                     </button>
                     <p style="margin-top: 10px; color: #6c757d; font-size: 0.9em;">
-                        Рецепт будет сохранён в вашем браузере и доступен в меню
+                        После отправки вы получите стандартное письмо в ваш почтовый клиент. Отправьте его, чтобы рецепт попал на модерацию.
                     </p>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
+</div>
 
     <!-- Скрипты -->
     <script src="data.js"></script>
