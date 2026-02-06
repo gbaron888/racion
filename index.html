@@ -34,6 +34,7 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
         }
@@ -79,6 +80,355 @@
             opacity: 0;
             pointer-events: none;
         }
+        
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+            margin: 20px;
+        }
+        
+        header {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 1.8em;
+            color: #333;
+        }
+        
+        nav.tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            padding: 0;
+        }
+        
+        .tab-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 500;
+            color: #6c757d;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .tab-btn:hover {
+            background: #e9ecef;
+        }
+        
+        .tab-btn.active {
+            color: #667eea;
+            background: white;
+        }
+        
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #667eea;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 20px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .menu-day {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border: 2px solid transparent;
+        }
+        
+        .menu-day:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .menu-day.selected {
+            border-color: #667eea;
+            background: #eef2ff;
+        }
+        
+        .day-number {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .meal-type {
+            font-size: 0.8em;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+        
+        .meal-name {
+            font-size: 0.9em;
+            word-break: break-word;
+        }
+        
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        
+        .controls-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-warning {
+            background: #ffc107;
+            color: #212529;
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-info {
+            background: #17a2b8;
+            color: white;
+        }
+        
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 0.8em;
+        }
+        
+        .info-panel {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .info-item {
+            flex: 1;
+            min-width: 120px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .info-icon {
+            font-size: 1.5em;
+        }
+        
+        .info-label {
+            font-size: 0.8em;
+            color: #6c757d;
+        }
+        
+        .info-value {
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        
+        .shopping-list-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        
+        @media (min-width: 768px) {
+            .shopping-list-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        .shopping-section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .ingredient-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .ingredient-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .ingredient-item:last-child {
+            border-bottom: none;
+        }
+        
+        .recipe-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+        
+        .recipe-content {
+            background: white;
+            border-radius: 10px;
+            max-width: 90%;
+            max-height: 90%;
+            overflow: auto;
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            z-index: 10001;
+        }
+        
+        .recipe-details {
+            padding: 20px;
+        }
+        
+        .form-section {
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #495057;
+        }
+        
+        .recipe-input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+        
+        textarea.recipe-input {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .ingredient-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .ingredient-row input {
+            flex: 1;
+        }
+        
+        .shopping-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            padding: 20px;
+            color: white;
+            font-size: 0.9em;
+            opacity: 0.9;
+            width: 100%;
+        }
     </style>
 </head>
 <body>
@@ -114,17 +464,13 @@
             </button>
         </nav>
 
-        <!-- Основной контент с валидной структурой (исправлено: один тег main) -->
+        <!-- Основной контент -->
         <main>
             <!-- Вкладка: Меню на 31 день -->
             <div class="tab-content active" id="menu-tab">
                 <section class="menu-section">
                     <div class="menu-grid" id="menuGrid">
-                        <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: #6c757d;">
-                            <div style="font-size: 2em; margin-bottom: 20px;">⏳</div>
-                            <p style="font-size: 1.2em; margin-bottom: 15px;">Загрузка меню...</p>
-                            <p style="font-size: 0.9em;">Пожалуйста, подождите, идёт инициализация приложения</p>
-                        </div>
+                        <!-- Карточки дней будут сгенерированы скриптом -->
                     </div>
                 </section>
 
@@ -185,7 +531,7 @@
                 </div>
             </div>
 
-            <!-- Вкладка: Список покупок (исправлено: заменен section на div для валидности) -->
+            <!-- Вкладка: Список покупок -->
             <div class="tab-content" id="shopping-tab">
                 <div class="shopping-header">
                     <h2>🛒 Список покупок</h2>
@@ -200,7 +546,7 @@
                         <div class="section-header">
                             <h3>📋 Ингредиенты по выбранным блюдам</h3>
                             <button class="btn btn-sm btn-info" onclick="expandAllIngredients()">
-                                <span style="margin-right: 5px;">🔽</span> <!-- Исправлено: заменен невалидный символ -->
+                                <span style="margin-right: 5px;">▼</span>
                                 Развернуть всё
                             </button>
                         </div>
