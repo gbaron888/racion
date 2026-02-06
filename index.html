@@ -16,6 +16,7 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             padding: 20px;
             color: #333;
+            min-height: 100vh;
         }
 
         .container {
@@ -99,6 +100,11 @@
             padding: 20px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             border: 2px solid #e0e0e0;
+            transition: transform 0.3s;
+        }
+
+        .day-card:hover {
+            transform: translateY(-5px);
         }
 
         .day-header {
@@ -144,6 +150,7 @@
             font-size: 1.2em;
             color: #667eea;
             transition: transform 0.2s;
+            margin-left: 10px;
         }
 
         .recipe-icon:hover {
@@ -184,6 +191,7 @@
             width: 20px;
             height: 20px;
             cursor: pointer;
+            accent-color: #4caf50;
         }
 
         .controls {
@@ -292,6 +300,10 @@
             cursor: pointer;
             color: #999;
             transition: color 0.3s;
+            background: none;
+            border: none;
+            padding: 0;
+            line-height: 1;
         }
 
         .close-modal:hover {
@@ -319,6 +331,7 @@
             border-radius: 20px;
             font-size: 0.9em;
             font-weight: 600;
+            margin-top: 10px;
         }
 
         .recipe-grid {
@@ -427,11 +440,31 @@
             display: inline-flex;
             align-items: center;
             gap: 5px;
+            margin-top: 10px;
         }
 
         .add-btn:hover {
             background: #218838;
             transform: translateY(-1px);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-size: 1.2em;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state i {
+            font-size: 3em;
+            display: block;
+            margin-bottom: 20px;
         }
 
         @media (max-width: 768px) {
@@ -448,6 +481,14 @@
             }
             
             .tab-btn {
+                width: 100%;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .btn {
                 width: 100%;
             }
         }
@@ -472,33 +513,34 @@
                 <button class="btn" aria-label="Заполнить случайно" onclick="app.generateRandomMenu()">🎲 Заполнить случайно</button>
                 <button class="btn btn-success" aria-label="Сохранить меню" onclick="app.saveMenu()">💾 Сохранить меню</button>
                 <button class="btn btn-danger" aria-label="Сбросить меню" onclick="app.resetMenu()">🗑️ Сбросить меню</button>
-                <button class="btn btn-warning" aria-label="Посмотреть список покупок" onclick="app.viewShoppingList()">🛒 Посмотреть список покупок</button>
+                <button class="btn btn-warning" aria-label="Посмотреть список покупок" onclick="app.viewShoppingList()">🛒 Список покупок</button>
             </div>
             <div class="menu-grid" id="menuGrid">
-                <!-- Меню будет сгенерировано JavaScript -->
+                <div class="loading">Загрузка меню...</div>
             </div>
         </div>
 
         <div id="ingredients-tab" class="tab-content">
             <h2 class="list-header">🥗 Ингредиенты по дням</h2>
-            <div id="ingredientsList">
-                <div style="text-align: center; padding: 40px; color: #999;">
-                    Выберите блюда в меню, чтобы увидеть ингредиенты
-                </div>
+            <div class="controls">
+                <button class="btn" onclick="app.switchToMenu()">📋 Вернуться к меню</button>
+            </div>
+            <div id="ingredientsList" class="empty-state">
+                <div>📋</div>
+                <p>Выберите блюда в меню, чтобы увидеть ингредиенты</p>
             </div>
         </div>
 
         <div id="shopping-tab" class="tab-content">
             <h2 class="list-header">🛒 Список покупок</h2>
             <div class="controls">
-                <button class="btn btn-success" aria-label="Скачать список покупок" onclick="app.downloadShoppingList()">📥 Скачать список</button>
+                <button class="btn btn-success" aria-label="Скачать список покупок" onclick="app.downloadShoppingList()">📥 Скачать</button>
                 <button class="btn btn-danger" aria-label="Очистить список покупок" onclick="app.clearShoppingList()">🗑️ Очистить всё</button>
                 <button class="btn" aria-label="Вернуться к меню" onclick="app.switchToMenu()">📋 Вернуться к меню</button>
             </div>
-            <div id="shoppingList">
-                <div style="text-align: center; padding: 40px; color: #999;">
-                    Выберите блюда, чтобы сформировать список покупок
-                </div>
+            <div id="shoppingList" class="empty-state">
+                <div>🛒</div>
+                <p>Выберите блюда, чтобы сформировать список покупок</p>
             </div>
         </div>
 
@@ -570,7 +612,7 @@
                 <button class="close-modal" onclick="ui.closeRecipeModal()" aria-label="Закрыть модальное окно">&times;</button>
             </div>
             <div id="recipeContent">
-                <!-- Рецепт будет загружен сюда -->
+                <div class="loading">Загрузка рецепта...</div>
             </div>
         </div>
     </div>
@@ -582,37 +624,40 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
 
     <script>
-        // Настройки Firebase
+        // ⚠️ ЗАМЕНИТЕ НА СВОИ ДАННЫЕ ИЗ FIREBASE CONSOLE ⚠️
         const firebaseConfig = {
-            apiKey: "AIzaSyDoN4jRhnNNH5NTHuyHrU44tEyNNyJUv58",
-            authDomain: "racion-bb.firebaseapp.com",
-            projectId: "racion-bb",
-            storageBucket: "racion-bb.appspot.com",
-            messagingSenderId: "649664299148",
-            appId: "1:649664299148:web:5c7fd0b25f9f153a123ba9"
+            apiKey: "YOUR_API_KEY",
+            authDomain: "your-project.firebaseapp.com",
+            projectId: "your-project",
+            storageBucket: "your-project.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
         };
 
         // Инициализация Firebase
-        firebase.initializeApp(firebaseConfig);
-        
-        // Глобальные переменные для сервисов Firebase
-        const db = firebase.firestore();
-        const auth = firebase.auth();
-        const storage = firebase.storage();
+        if (firebase && firebase.initializeApp) {
+            firebase.initializeApp(firebaseConfig);
+            const db = firebase.firestore();
+            const auth = firebase.auth();
+            const storage = firebase.storage();
+            window.firebaseDB = db;
+            window.firebaseAuth = auth;
+            window.firebaseStorage = storage;
+        } else {
+            console.error('Firebase не загружен!');
+        }
     </script>
 
-    <!-- Подключение локальных скриптов ПОСЛЕ инициализации Firebase -->
-    <script src="database.js" defer></script>
-    <script src="utils.js" defer></script>
-    <script src="ui.js" defer></script>
-    <script src="app.js" defer></script>
-    <script defer>
-        // Инициализация приложения при загрузке страницы
+    <!-- Подключение локальных скриптов -->
+    <script src="js/database.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        // Инициализация приложения
         document.addEventListener('DOMContentLoaded', function() {
-            if (typeof app !== 'undefined' && typeof app.init === 'function') {
+            if (typeof app !== 'undefined') {
                 app.init();
-                app.initTabs();
-                app.initModalClose();
             }
         });
     </script>
