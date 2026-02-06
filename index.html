@@ -11,12 +11,12 @@
     <title>🍽️ Меню на 31 день с рецептами и списком покупок</title>
     
     <!-- Фавикон -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍽️</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍽️</text></svg>">
     
     <!-- Стили -->
     <link rel="stylesheet" href="styles.css">
     
-    <!-- Предзагрузка шрифтов (опционально) -->
+    <!-- Предзагрузка шрифтов (исправлено: удалены лишние пробелы) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -114,139 +114,141 @@
             </button>
         </nav>
 
-        <!-- Вкладка: Меню на 31 день -->
-        <main class="tab-content active" id="menu-tab">
-            <section class="menu-section">
-                <div class="menu-grid" id="menuGrid">
-                    <!-- Здесь будет сгенерировано 31 карточка дня через JavaScript -->
-                    <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: #6c757d;">
-                        <div style="font-size: 2em; margin-bottom: 20px;">⏳</div>
-                        <p style="font-size: 1.2em; margin-bottom: 15px;">Загрузка меню...</p>
-                        <p style="font-size: 0.9em;">Пожалуйста, подождите, идёт инициализация приложения</p>
+        <!-- Основной контент с валидной структурой (исправлено: один тег main) -->
+        <main>
+            <!-- Вкладка: Меню на 31 день -->
+            <div class="tab-content active" id="menu-tab">
+                <section class="menu-section">
+                    <div class="menu-grid" id="menuGrid">
+                        <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: #6c757d;">
+                            <div style="font-size: 2em; margin-bottom: 20px;">⏳</div>
+                            <p style="font-size: 1.2em; margin-bottom: 15px;">Загрузка меню...</p>
+                            <p style="font-size: 0.9em;">Пожалуйста, подождите, идёт инициализация приложения</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Контролы управления меню -->
+                <div class="controls">
+                    <div class="controls-group">
+                        <button class="btn btn-primary" onclick="generateRandomMenu()">
+                            <span style="margin-right: 8px;">🎲</span>
+                            Заполнить случайно
+                        </button>
+                        <button class="btn btn-secondary" onclick="resetMenu()">
+                            <span style="margin-right: 8px;">🔄</span>
+                            Сбросить меню
+                        </button>
+                    </div>
+                    <div class="controls-group">
+                        <button class="btn btn-warning" onclick="viewShoppingList()">
+                            <span style="margin-right: 8px;">📋</span>
+                            Посмотреть список покупок
+                        </button>
+                        <button class="btn btn-success" onclick="saveMenu()">
+                            <span style="margin-right: 8px;">💾</span>
+                            Сохранить меню
+                        </button>
                     </div>
                 </div>
-            </section>
 
-            <!-- Контролы управления меню -->
-            <div class="controls">
-                <div class="controls-group">
-                    <button class="btn btn-primary" onclick="generateRandomMenu()">
-                        <span style="margin-right: 8px;">🎲</span>
-                        Заполнить случайно
-                    </button>
-                    <button class="btn btn-secondary" onclick="resetMenu()">
-                        <span style="margin-right: 8px;">🔄</span>
-                        Сбросить меню
-                    </button>
-                </div>
-                <div class="controls-group">
-                    <button class="btn btn-warning" onclick="viewShoppingList()">
-                        <span style="margin-right: 8px;">📋</span>
-                        Посмотреть список покупок
-                    </button>
-                    <button class="btn btn-success" onclick="saveMenu()">
-                        <span style="margin-right: 8px;">💾</span>
-                        Сохранить меню
-                    </button>
+                <!-- Информационная панель -->
+                <div class="info-panel">
+                    <div class="info-item">
+                        <span class="info-icon">🍳</span>
+                        <div>
+                            <div class="info-label">Завтраков</div>
+                            <div class="info-value" id="breakfastCount">0</div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-icon">🍲</span>
+                        <div>
+                            <div class="info-label">Обедов</div>
+                            <div class="info-value" id="lunchCount">0</div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-icon">🍽️</span>
+                        <div>
+                            <div class="info-label">Ужинов</div>
+                            <div class="info-value" id="dinnerCount">0</div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-icon">🛒</span>
+                        <div>
+                            <div class="info-label">Ингредиентов</div>
+                            <div class="info-value" id="ingredientCount">0</div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Информационная панель -->
-            <div class="info-panel">
-                <div class="info-item">
-                    <span class="info-icon">🍳</span>
-                    <div>
-                        <div class="info-label">Завтраков</div>
-                        <div class="info-value" id="breakfastCount">0</div>
-                    </div>
+            <!-- Вкладка: Список покупок (исправлено: заменен section на div для валидности) -->
+            <div class="tab-content" id="shopping-tab">
+                <div class="shopping-header">
+                    <h2>🛒 Список покупок</h2>
+                    <p style="text-align: center; color: #6c757d; margin-top: 10px;">
+                        Сформирован на основе выбранных блюд в меню
+                    </p>
                 </div>
-                <div class="info-item">
-                    <span class="info-icon">🍲</span>
-                    <div>
-                        <div class="info-label">Обедов</div>
-                        <div class="info-value" id="lunchCount">0</div>
+
+                <div class="shopping-list-container">
+                    <!-- Левая колонка: Ингредиенты по блюдам -->
+                    <div class="shopping-section">
+                        <div class="section-header">
+                            <h3>📋 Ингредиенты по выбранным блюдам</h3>
+                            <button class="btn btn-sm btn-info" onclick="expandAllIngredients()">
+                                <span style="margin-right: 5px;">🔽</span> <!-- Исправлено: заменен невалидный символ -->
+                                Развернуть всё
+                            </button>
+                        </div>
+                        <div class="ingredient-list" id="ingredientsList">
+                            <div style="text-align: center; padding: 60px 20px; color: #6c757d;">
+                                <div style="font-size: 3em; margin-bottom: 20px;">🛒</div>
+                                <p style="font-size: 1.2em; margin-bottom: 10px;">Выберите блюда в меню</p>
+                                <p style="font-size: 0.9em;">Чтобы увидеть ингредиенты</p>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="info-item">
-                    <span class="info-icon">🍽️</span>
-                    <div>
-                        <div class="info-label">Ужинов</div>
-                        <div class="info-value" id="dinnerCount">0</div>
-                    </div>
-                </div>
-                <div class="info-item">
-                    <span class="info-icon">🛒</span>
-                    <div>
-                        <div class="info-label">Ингредиентов</div>
-                        <div class="info-value" id="ingredientCount">0</div>
+
+                    <!-- Правая колонка: Общий список покупок -->
+                    <div class="shopping-section">
+                        <div class="section-header">
+                            <h3>🛍️ Общий список покупок</h3>
+                            <button class="btn btn-sm btn-success" onclick="downloadShoppingList()">
+                                <span style="margin-right: 5px;">💾</span>
+                                Скачать
+                            </button>
+                        </div>
+                        <div class="ingredient-list" id="shoppingList">
+                            <div style="text-align: center; padding: 60px 20px; color: #6c757d;">
+                                <div style="font-size: 3em; margin-bottom: 20px;">📝</div>
+                                <p style="font-size: 1.2em; margin-bottom: 10px;">Выберите блюда</p>
+                                <p style="font-size: 0.9em;">Чтобы сформировать список покупок</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Кнопки управления списком покупок -->
+                        <div class="shopping-controls">
+                            <button class="btn btn-secondary" onclick="clearShoppingList()">
+                                <span style="margin-right: 8px;">🗑️</span>
+                                Очистить список
+                            </button>
+                            <button class="btn btn-primary" onclick="markAllAsBought()">
+                                <span style="margin-right: 8px;">✅</span>
+                                Отметить всё как купленное
+                            </button>
+                            <button class="btn btn-primary" onclick="switchToMenu()">
+                                <span style="margin-right: 8px;">←</span>
+                                Вернуться к меню
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </main>
-
-        <!-- Вкладка: Список покупок -->
-        <section class="tab-content" id="shopping-tab">
-            <div class="shopping-header">
-                <h2>🛒 Список покупок</h2>
-                <p style="text-align: center; color: #6c757d; margin-top: 10px;">
-                    Сформирован на основе выбранных блюд в меню
-                </p>
-            </div>
-
-            <div class="shopping-list-container">
-                <!-- Левая колонка: Ингредиенты по блюдам -->
-                <div class="shopping-section">
-                    <div class="section-header">
-                        <h3>📋 Ингредиенты по выбранным блюдам</h3>
-                        <button class="btn btn-sm btn-info" onclick="expandAllIngredients()">
-                            <span style="margin-right: 5px;">펼</span>
-                            Развернуть всё
-                        </button>
-                    </div>
-                    <div class="ingredient-list" id="ingredientsList">
-                        <div style="text-align: center; padding: 60px 20px; color: #6c757d;">
-                            <div style="font-size: 3em; margin-bottom: 20px;">🛒</div>
-                            <p style="font-size: 1.2em; margin-bottom: 10px;">Выберите блюда в меню</p>
-                            <p style="font-size: 0.9em;">Чтобы увидеть ингредиенты</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Правая колонка: Общий список покупок -->
-                <div class="shopping-section">
-                    <div class="section-header">
-                        <h3>🛍️ Общий список покупок</h3>
-                        <button class="btn btn-sm btn-success" onclick="downloadShoppingList()">
-                            <span style="margin-right: 5px;">💾</span>
-                            Скачать
-                        </button>
-                    </div>
-                    <div class="ingredient-list" id="shoppingList">
-                        <div style="text-align: center; padding: 60px 20px; color: #6c757d;">
-                            <div style="font-size: 3em; margin-bottom: 20px;">📝</div>
-                            <p style="font-size: 1.2em; margin-bottom: 10px;">Выберите блюда</p>
-                            <p style="font-size: 0.9em;">Чтобы сформировать список покупок</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Кнопки управления списком покупок -->
-                    <div class="shopping-controls">
-                        <button class="btn btn-secondary" onclick="clearShoppingList()">
-                            <span style="margin-right: 8px;">🗑️</span>
-                            Очистить список
-                        </button>
-                        <button class="btn btn-primary" onclick="markAllAsBought()">
-                            <span style="margin-right: 8px;">✅</span>
-                            Отметить всё как купленное
-                        </button>
-                        <button class="btn btn-primary" onclick="switchToMenu()">
-                            <span style="margin-right: 8px;">←</span>
-                            Вернуться к меню
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
     </div>
 
     <!-- Модальное окно: Рецепт -->
@@ -256,7 +258,6 @@
                 <span style="font-size: 2em; line-height: 1;">×</span>
             </button>
             <div id="recipeContent">
-                <!-- Контент рецепта будет загружен через JavaScript -->
                 <div style="text-align: center; padding: 60px 20px; color: #6c757d;">
                     <div style="font-size: 3em; margin-bottom: 20px;">📖</div>
                     <p>Выберите блюдо, чтобы посмотреть рецепт</p>
