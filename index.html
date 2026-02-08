@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meal Planner - Планировщик питания</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="logo">🍽️ Meal Planner</h1>
+            <nav class="nav-tabs">
+                <button class="tab-btn active" data-tab="menu">📋 Меню на месяц</button>
+                <button class="tab-btn" data-tab="shopping">🛒 Список покупок</button>
+                <button class="tab-btn" data-tab="recipes">📚 Мои рецепты</button>
+            </nav>
+        </header>
+
+        <main class="content">
+            <!-- Вкладка Меню -->
+            <section id="menu-tab" class="tab-content active">
+                <div class="controls">
+                    <button class="btn btn-primary" id="random-fill">🎲 Случайное заполнение</button>
+                    <button class="btn btn-secondary" id="reset-menu">🗑️ Сброс меню</button>
+                    <button class="btn btn-success" id="save-menu">💾 Сохранить меню</button>
+                    <button class="btn btn-info" id="load-menu">📂 Загрузить меню</button>
+                    <input type="file" id="file-input" accept=".json" hidden>
+                </div>
+
+                <div class="days-grid" id="days-grid">
+                    <!-- 31 карточка дня будет сгенерирована через JS -->
+                </div>
+            </section>
+
+            <!-- Вкладка Список покупок -->
+            <section id="shopping-tab" class="tab-content">
+                <div class="shopping-controls">
+                    <button class="btn btn-primary" id="export-shopping">📤 Экспорт в TXT</button>
+                    <button class="btn btn-secondary" id="clear-shopping">🧹 Очистить список</button>
+                </div>
+
+                <div class="shopping-categories" id="shopping-categories">
+                    <!-- Категории продуктов будут сгенерированы через JS -->
+                </div>
+            </section>
+
+            <!-- Вкладка Мои рецепты -->
+            <section id="recipes-tab" class="tab-content">
+                <div class="custom-recipe-form">
+                    <h2>Добавить свой рецепт</h2>
+                    <form id="recipe-form">
+                        <div class="form-group">
+                            <label>Название блюда:</label>
+                            <input type="text" id="recipe-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Кухня:</label>
+                            <select id="recipe-cuisine" required>
+                                <option value="russian">Русская</option>
+                                <option value="tatar">Татарская</option>
+                                <option value="french">Французская</option>
+                                <option value="italian">Итальянская</option>
+                                <option value="spanish">Испанская</option>
+                                <option value="japanese">Японская</option>
+                                <option value="thai">Тайская</option>
+                                <option value="vietnamese">Вьетнамская</option>
+                                <option value="georgian">Грузинская</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Категория:</label>
+                            <select id="recipe-category" required>
+                                <option value="breakfast">Завтрак</option>
+                                <option value="soup">Первое блюдо</option>
+                                <option value="main">Второе блюдо</option>
+                                <option value="salad">Салат</option>
+                                <option value="garnish">Гарнир</option>
+                                <option value="dessert">Десерт</option>
+                                <option value="drink">Напиток</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Ингредиенты (каждый с новой строки):</label>
+                            <textarea id="recipe-ingredients" rows="5" placeholder="Пример:&#10;Мука - 200г&#10;Яйца - 2 шт.&#10;Сахар - 100г" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Пошаговый рецепт:</label>
+                            <textarea id="recipe-steps" rows="8" placeholder="Пример:&#10;1. Смешать все ингредиенты&#10;2. Выпекать 30 минут" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Советы шеф-повара:</label>
+                            <textarea id="recipe-tips" rows="3" placeholder="Необязательное поле"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">📤 Отправить на почту</button>
+                    </form>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Модальное окно рецепта -->
+    <div class="modal" id="recipe-modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2 id="modal-title"></h2>
+            <div class="modal-section">
+                <h3>Ингредиенты:</h3>
+                <table id="modal-ingredients">
+                    <thead>
+                        <tr>
+                            <th>Ингредиент</th>
+                            <th>Количество</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ingredients-body"></tbody>
+                </table>
+            </div>
+            <div class="modal-section">
+                <h3>Пошаговый рецепт:</h3>
+                <ol id="modal-steps"></ol>
+            </div>
+            <div class="modal-section" id="modal-tips-section">
+                <h3>Советы шеф-повара:</h3>
+                <p id="modal-tips"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно выбора блюда -->
+    <div class="modal" id="meal-selector-modal">
+        <div class="modal-content selector-modal">
+            <span class="close-btn selector-close">&times;</span>
+            <div class="selector-steps">
+                <div id="step-category" class="selector-step active">
+                    <h2>Выберите прием пищи</h2>
+                    <div class="categories-grid" id="categories-grid"></div>
+                </div>
+                
+                <div id="step-subcategory" class="selector-step">
+                    <button class="btn btn-back" id="back-to-category">← Назад к категориям</button>
+                    <h2 id="subcategory-title">Выберите подкатегорию</h2>
+                    <div class="categories-grid" id="subcategories-grid"></div>
+                </div>
+                
+                <div id="step-dish" class="selector-step">
+                    <button class="btn btn-back" id="back-to-subcategory">← Назад</button>
+                    <h2 id="dish-title">Выберите блюдо</h2>
+                    <div class="dishes-list" id="dishes-list"></div>
+                </div>
+                
+                <div id="step-quantity" class="selector-step">
+                    <button class="btn btn-back" id="back-to-dish">← Назад</button>
+                    <h2>Количество порций</h2>
+                    <div class="quantity-selector">
+                        <button class="btn btn-secondary" id="decrease-qty">-</button>
+                        <input type="number" id="portion-quantity" min="1" value="1" class="quantity-input">
+                        <button class="btn btn-secondary" id="increase-qty">+</button>
+                    </div>
+                    <div class="dish-preview" id="dish-preview"></div>
+                    <button class="btn btn-primary btn-confirm" id="confirm-selection">✅ Подтвердить выбор</button>
+                </div>
+
+                <div id="step-quantity" class="selector-step">
+    <button class="btn btn-back" id="back-to-dish">← Назад</button>
+    <h2>Количество порций</h2>
+    <div class="quantity-selector">
+        <button class="btn btn-secondary" id="decrease-qty">-</button>
+        <input type="number" id="portion-quantity" min="1" value="1" class="quantity-input">
+        <button class="btn btn-secondary" id="increase-qty">+</button>
+    </div>
+    <div class="dish-preview" id="dish-preview"></div>
+    <div style="display: flex; gap: 10px; margin-top: 15px;">
+        <button class="btn btn-primary btn-confirm" id="confirm-selection" style="flex: 1;">✅ Подтвердить выбор</button>
+        ${currentSelection.day && currentSelection.mealType ? '<button class="btn btn-secondary" id="clear-selection" style="flex: 1;">🗑️ Удалить выбор</button>' : ''}
+    </div>
+</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Уведомления -->
+    <div class="notification-container" id="notification-container"></div>
+
+    <script src="recipes.js"></script>
+    <script src="scripts.js"></script>
+</body>
+</html>
