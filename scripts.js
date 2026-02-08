@@ -256,6 +256,8 @@ function renderDayMenu(day) {
         
         if (slotElement) {
             renderSlot(slotElement, day, slotId, slotData);
+        } else {
+            console.warn(`Элемент слота не найден: slot-${day}-${slotId}`);
         }
     });
 }
@@ -591,7 +593,10 @@ function fillMenuRandomly() {
             
             // Заполняем каждый слот случайным блюдом
             Object.entries(MEAL_SLOTS).forEach(([slotId, config]) => {
-                currentMenu[day].slots[slotId] = getRandomMeal(config.type);
+                const randomMeal = getRandomMeal(config.type);
+                if (randomMeal) {
+                    currentMenu[day].slots[slotId] = randomMeal;
+                }
             });
         }
         
