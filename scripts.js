@@ -9,9 +9,22 @@ const CATEGORIES = [
     'Консервы', 'Орехи и семечки', 'Фрукты и ягоды', 'Прочее'
 ];
 
+// ========== КОНСТАНТЫ СЛОТОВ ==========
+const MEAL_SLOTS = {
+    breakfast: { name: 'Завтрак', icon: '🌅', section: 'breakfast', type: 'breakfast' },
+    'soup-lunch': { name: 'Первое блюдо', icon: '🍲', section: 'lunch', type: 'soup' },
+    'main-lunch': { name: 'Второе блюдо', icon: '🍖', section: 'lunch', type: 'main' },
+    'salad-lunch': { name: 'Салат', icon: '🥗', section: 'lunch', type: 'salad' },
+    'main-dinner': { name: 'Основное блюдо', icon: '🍖', section: 'dinner', type: 'main' },
+    'garnish-dinner': { name: 'Гарнир', icon: '🍚', section: 'dinner', type: 'garnish' },
+    'dessert-dinner': { name: 'Десерт', icon: '🍰', section: 'dinner', type: 'dessert' },
+    'drink-dinner': { name: 'Напиток', icon: '🥤', section: 'dinner', type: 'drink' }
+};
+
 // Глобальные переменные для выбора блюда
 let currentSelection = {
     day: null,
+    slotId: null,  // Уникальный идентификатор слота
     mealType: null,
     category: null,
     subcategory: null,
@@ -134,6 +147,56 @@ function createDayCard(day) {
     const currentDay = today.getDate();
     const isToday = day === currentDay;
     
+    // Генерируем уникальные слоты для каждого приема пищи
+    let slotsHTML = '';
+    
+    // Завтрак
+    slotsHTML += `
+        <div class="meal-section breakfast">
+            <div class="meal-title">🥣 Завтрак <span class="meal-category">(выберите)</span></div>
+            <div class="meal-items" id="slot-${day}-breakfast"></div>
+        </div>
+    `;
+    
+    // Обед
+    slotsHTML += `
+        <div class="meal-section lunch">
+            <div class="meal-title">🍲 Обед</div>
+            <div class="meal-subsection">
+                <div class="meal-title">Первое блюдо <span class="meal-category">(выберите)</span></div>
+                <div class="meal-items" id="slot-${day}-soup-lunch"></div>
+            </div>
+            <div class="meal-subsection">
+                <div class="meal-title">Второе блюдо <span class="meal-category">(выберите)</span></div>
+                <div class="meal-items" id="slot-${day}-main-lunch"></div>
+            </div>
+            <div class="meal-subsection">
+                <div class="meal-title">Салат <span class="meal-category">(выберите)</span></div>
+                <div class="meal-items" id="slot-${day}-salad-lunch"></div>
+            </div>
+        </div>
+    `;
+    
+    // Ужин
+    slotsHTML += `
+        <div class="meal-section dinner">
+            <div class="meal-title">🍽️ Ужин</div>
+            <div class="meal-subsection">
+                <div class="meal-title">Основное блюдо <span class="meal-category">(выберите)</span></div>
+                <div class="meal-items" id="slot-${day}-main-dinner"></div>
+            </div>
+            <div class="meal-subsection">
+                <div class="meal-title">Гарнир <span class="meal-category">(выберите)</span></div>
+                <div class="meal-items" id="slot-${day}-garnish-dinner"></div>
+            </div>
+            <div class="meal-subsection">
+                <div class="meal-title">Десерт/Напиток <span class="meal-category">(выберите)</span></div>
+                <div class="meal-items" id="slot-${day}-dessert-dinner"></div>
+                <div class="meal-items" id="slot-${day}-drink-dinner"></div>
+            </div>
+        </div>
+    `;
+    
     dayCard.innerHTML = `
         <div class="day-header">
             <div>
@@ -142,44 +205,7 @@ function createDayCard(day) {
             </div>
             ${day > 1 ? `<button class="btn btn-secondary btn-sm same-as-previous" data-day="${day}">🔄 То же, что и вчера</button>` : ''}
         </div>
-        
-        <div class="meal-section breakfast">
-            <div class="meal-title">🥣 Завтрак <span class="meal-category">(выберите категорию)</span></div>
-            <div class="meal-items" data-meal="breakfast"></div>
-        </div>
-        
-        <div class="meal-section lunch">
-            <div class="meal-title">🍲 Обед</div>
-            <div class="meal-subsection">
-                <div class="meal-title">Первое блюдо <span class="meal-category">(выберите)</span></div>
-                <div class="meal-items" data-meal="soup"></div>
-            </div>
-            <div class="meal-subsection">
-                <div class="meal-title">Второе блюдо <span class="meal-category">(выберите)</span></div>
-                <div class="meal-items" data-meal="main"></div>
-            </div>
-            <div class="meal-subsection">
-                <div class="meal-title">Салат <span class="meal-category">(выберите)</span></div>
-                <div class="meal-items" data-meal="salad"></div>
-            </div>
-        </div>
-        
-        <div class="meal-section dinner">
-            <div class="meal-title">🍽️ Ужин</div>
-            <div class="meal-subsection">
-                <div class="meal-title">Основное блюдо <span class="meal-category">(выберите)</span></div>
-                <div class="meal-items" data-meal="main"></div>
-            </div>
-            <div class="meal-subsection">
-                <div class="meal-title">Гарнир <span class="meal-category">(выберите)</span></div>
-                <div class="meal-items" data-meal="garnish"></div>
-            </div>
-            <div class="meal-subsection">
-                <div class="meal-title">Десерт/Напиток <span class="meal-category">(выберите)</span></div>
-                <div class="meal-items" data-meal="dessert"></div>
-                <div class="meal-items" data-meal="drink"></div>
-            </div>
-        </div>
+        ${slotsHTML}
     `;
     
     // Добавить обработчики для кнопки "То же, что и вчера"
@@ -204,12 +230,16 @@ function copyPreviousDay(day) {
     if (day <= 1) return;
     
     const prevDayData = currentMenu[day - 1];
-    if (!prevDayData) {
+    if (!prevDayData?.slots) {
         showNotification('Нет данных за предыдущий день', 'error');
         return;
     }
     
-    currentMenu[day] = JSON.parse(JSON.stringify(prevDayData));
+    // Глубокое копирование слотов
+    currentMenu[day] = {
+        slots: JSON.parse(JSON.stringify(prevDayData.slots))
+    };
+    
     renderDayMenu(day);
     updateShoppingList();
     saveToLocalStorage();
@@ -217,45 +247,58 @@ function copyPreviousDay(day) {
 }
 
 function renderDayMenu(day) {
-    const dayCard = document.querySelector(`[data-day="${day}"]`);
-    if (!dayCard) {
-        console.error(`Карточка дня ${day} не найдена`);
-        return;
-    }
+    const dayData = currentMenu[day] || { slots: {} };
     
-    const dayData = currentMenu[day] || {};
-    
-    // Обновить все приемы пищи
-    ['breakfast', 'soup', 'main', 'salad', 'garnish', 'dessert', 'drink'].forEach(mealType => {
-        const mealItems = dayCard.querySelectorAll(`[data-meal="${mealType}"]`);
-        mealItems.forEach(container => {
-            renderMealItem(container, day, mealType, dayData[mealType]);
-        });
+    // Рендерим каждый слот по уникальному ID
+    Object.keys(MEAL_SLOTS).forEach(slotId => {
+        const slotData = dayData.slots?.[slotId];
+        const slotElement = document.getElementById(`slot-${day}-${slotId}`);
+        
+        if (slotElement) {
+            renderSlot(slotElement, day, slotId, slotData);
+        }
     });
 }
 
-function renderMealItem(container, day, mealType, mealData) {
-    if (!mealData) {
-        container.innerHTML = `<div class="meal-item empty" onclick="openMealSelector(${day}, '${mealType}')">➕ Выбрать блюдо</div>`;
+function renderSlot(container, day, slotId, slotData) {
+    // Получаем тип блюда из конфигурации слота
+    const slotConfig = MEAL_SLOTS[slotId];
+    const mealType = slotConfig.type;
+    
+    if (!slotData) {
+        container.innerHTML = `
+            <div class="meal-item empty" onclick="openMealSelector(${day}, '${slotId}', '${mealType}')">
+                ➕ Выбрать блюдо
+            </div>
+        `;
         return;
     }
     
-    const recipe = findRecipeByPath(mealData.path);
+    const recipe = findRecipeByPath(slotData.path);
     if (!recipe) {
-        container.innerHTML = `<div class="meal-item empty" onclick="openMealSelector(${day}, '${mealType}')">➕ Выбрать блюдо</div>`;
+        container.innerHTML = `
+            <div class="meal-item empty" onclick="openMealSelector(${day}, '${slotId}', '${mealType}')">
+                ➕ Выбрать блюдо
+            </div>
+        `;
         return;
     }
     
     container.innerHTML = `
         <div class="meal-item">
             <div class="meal-content">
-                <span class="meal-name" onclick="openRecipeModal('${mealType}', '${mealData.path.join('|')}')">${recipe.name}</span>
-                ${mealData.quantity > 1 ? `<span class="quantity-badge">×${mealData.quantity}</span>` : ''}
+                <span class="meal-name" onclick="openRecipeModal('${mealType}', '${slotData.path.join('|')}')">
+                    ${recipe.name}
+                </span>
+                ${slotData.quantity > 1 ? `<span class="quantity-badge">×${slotData.quantity}</span>` : ''}
             </div>
             <div class="meal-actions">
-                <button class="btn-action btn-edit" title="Изменить" onclick="editMeal(${day}, '${mealType}')">✏️</button>
-                <button class="btn-action btn-quantity" title="Изменить количество" onclick="changeQuantity(${day}, '${mealType}')">🔢</button>
-                <button class="btn-action btn-delete" title="Удалить" onclick="deleteMeal(${day}, '${mealType}')">🗑️</button>
+                <button class="btn-action btn-edit" title="Изменить" 
+                        onclick="editMeal(${day}, '${slotId}')">✏️</button>
+                <button class="btn-action btn-quantity" title="Количество" 
+                        onclick="changeQuantity(${day}, '${slotId}')">🔢</button>
+                <button class="btn-action btn-delete" title="Удалить" 
+                        onclick="deleteMeal(${day}, '${slotId}')">🗑️</button>
             </div>
         </div>
     `;
@@ -297,44 +340,69 @@ function findRecipeByPath(pathArray) {
 
 // ========== ФУНКЦИИ УПРАВЛЕНИЯ БЛЮДАМИ ==========
 
-// Изменить блюдо
-function editMeal(day, mealType) {
-    const dayData = currentMenu[day];
-    const mealData = dayData?.[mealType];
+// Открыть селектор блюд
+function openMealSelector(day, slotId, mealType = null) {
+    // Если тип не передан, определяем из конфигурации
+    const slotConfig = MEAL_SLOTS[slotId];
+    const actualMealType = mealType || slotConfig.type;
     
-    if (!mealData) {
-        openMealSelector(day, mealType);
+    currentSelection = {
+        day: parseInt(day),
+        slotId: slotId,
+        mealType: actualMealType,
+        category: null,
+        subcategory: null,
+        dishIndex: null,
+        quantity: 1
+    };
+    
+    // Показать первый шаг - выбор категории
+    showSelectorStep('category');
+    renderCategories(actualMealType);
+    const modal = document.getElementById('meal-selector-modal');
+    if (modal) modal.style.display = 'block';
+}
+
+// Изменить блюдо
+function editMeal(day, slotId) {
+    const dayData = currentMenu[day];
+    const slotData = dayData?.slots?.[slotId];
+    
+    if (!slotData) {
+        openMealSelector(day, slotId);
         return;
     }
     
-    // Сохранить текущий выбор для возврата
+    // Получаем тип блюда из пути
+    const mealType = slotData.path[0];
+    
     currentSelection = {
         day: parseInt(day),
+        slotId: slotId,
         mealType: mealType,
         category: null,
-        subcategory: mealData.path[1],
-        dishIndex: mealData.path[2],
-        quantity: mealData.quantity
+        subcategory: slotData.path[1],
+        dishIndex: slotData.path[2],
+        quantity: slotData.quantity
     };
     
-    // Показать селектор с уже выбранным блюдом
     showSelectorStep('dish');
-    renderDishes(mealType, mealData.path[1]);
+    renderDishes(mealType, slotData.path[1]);
     document.getElementById('dish-title').textContent = `Изменить блюдо`;
     document.getElementById('meal-selector-modal').style.display = 'block';
 }
 
 // Изменить количество порций
-function changeQuantity(day, mealType) {
+function changeQuantity(day, slotId) {
     const dayData = currentMenu[day];
-    const mealData = dayData?.[mealType];
+    const slotData = dayData?.slots?.[slotId];
     
-    if (!mealData) {
+    if (!slotData) {
         showNotification('Сначала выберите блюдо', 'error');
         return;
     }
     
-    const recipe = findRecipeByPath(mealData.path);
+    const recipe = findRecipeByPath(slotData.path);
     if (!recipe) {
         showNotification('Рецепт не найден', 'error');
         return;
@@ -358,8 +426,10 @@ function changeQuantity(day, mealType) {
                 <div class="quantity-option custom-qty">Другое...</div>
             </div>
             <div id="custom-quantity-input" style="display: none; margin-top: 20px;">
-                <input type="number" id="custom-qty" min="1" value="${mealData.quantity}" class="quantity-input" style="width: 100%; padding: 10px; font-size: 18px;">
-                <button class="btn btn-primary" style="width: 100%; margin-top: 10px;" onclick="applyCustomQuantity(${day}, '${mealType}')">Применить</button>
+                <input type="number" id="custom-qty" min="1" value="${slotData.quantity}" 
+                       class="quantity-input" style="width: 100%; padding: 10px; font-size: 18px;">
+                <button class="btn btn-primary" style="width: 100%; margin-top: 10px;" 
+                        onclick="applyCustomQuantity(${day}, '${slotId}')">Применить</button>
             </div>
         </div>
     `;
@@ -375,20 +445,20 @@ function changeQuantity(day, mealType) {
             }
             
             const qty = parseInt(this.dataset.qty);
-            applyQuantityChange(day, mealType, qty);
+            applyQuantityChange(day, slotId, qty);
             closeQuantityModal();
         });
     });
 }
 
 // Применить изменение количества
-function applyQuantityChange(day, mealType, quantity) {
-    if (!currentMenu[day] || !currentMenu[day][mealType]) {
+function applyQuantityChange(day, slotId, quantity) {
+    if (!currentMenu[day]?.slots?.[slotId]) {
         showNotification('Ошибка: блюдо не найдено', 'error');
         return;
     }
     
-    currentMenu[day][mealType].quantity = quantity;
+    currentMenu[day].slots[slotId].quantity = quantity;
     renderDayMenu(day);
     updateShoppingList();
     saveToLocalStorage();
@@ -396,7 +466,7 @@ function applyQuantityChange(day, mealType, quantity) {
 }
 
 // Применить кастомное количество
-function applyCustomQuantity(day, mealType) {
+function applyCustomQuantity(day, slotId) {
     const qtyInput = document.getElementById('custom-qty');
     if (!qtyInput) return;
     
@@ -406,7 +476,7 @@ function applyCustomQuantity(day, mealType) {
         return;
     }
     
-    applyQuantityChange(day, mealType, qty);
+    applyQuantityChange(day, slotId, qty);
 }
 
 // Получить правильное окончание слова "порция"
@@ -423,17 +493,17 @@ function closeQuantityModal() {
 }
 
 // Удалить блюдо
-function deleteMeal(day, mealType) {
-    if (!currentMenu[day] || !currentMenu[day][mealType]) return;
+function deleteMeal(day, slotId) {
+    if (!currentMenu[day]?.slots?.[slotId]) return;
     
-    const recipe = findRecipeByPath(currentMenu[day][mealType].path);
+    const recipe = findRecipeByPath(currentMenu[day].slots[slotId].path);
     const dishName = recipe?.name || 'блюдо';
     
     if (confirm(`Удалить "${dishName}" из меню?`)) {
-        delete currentMenu[day][mealType];
+        delete currentMenu[day].slots[slotId];
         
-        // Если все блюда в день удалены, удаляем сам день
-        if (Object.keys(currentMenu[day]).length === 0) {
+        // Если все слоты удалены, удаляем день
+        if (Object.keys(currentMenu[day].slots).length === 0) {
             delete currentMenu[day];
         }
         
@@ -517,15 +587,12 @@ function fillMenuRandomly() {
         currentMenu = {};
         
         for (let day = 1; day <= DAYS_IN_MONTH; day++) {
-            currentMenu[day] = {
-                breakfast: getRandomMeal('breakfast'),
-                soup: getRandomMeal('soup'),
-                main: getRandomMeal('main'),
-                salad: getRandomMeal('salad'),
-                garnish: getRandomMeal('garnish'),
-                dessert: getRandomMeal('dessert'),
-                drink: getRandomMeal('drink')
-            };
+            currentMenu[day] = { slots: {} };
+            
+            // Заполняем каждый слот случайным блюдом
+            Object.entries(MEAL_SLOTS).forEach(([slotId, config]) => {
+                currentMenu[day].slots[slotId] = getRandomMeal(config.type);
+            });
         }
         
         renderAllDays();
@@ -586,18 +653,17 @@ function renderAllDays() {
 function updateShoppingList() {
     shoppingList = {};
     
-    // Собрать все ингредиенты из меню
+    // Проходим по всем дням и слотам
     for (let day = 1; day <= DAYS_IN_MONTH; day++) {
         const dayData = currentMenu[day];
-        if (!dayData) continue;
+        if (!dayData?.slots) continue;
         
-        Object.values(dayData).forEach(meal => {
-            if (!meal) return;
+        // Проходим по всем слотам дня
+        Object.values(dayData.slots).forEach(slot => {
+            if (!slot) return;
             
-            const recipe = findRecipeByPath(meal.path);
-            if (!recipe) return;
-            
-            if (!recipe.ingredients || !Array.isArray(recipe.ingredients)) return;
+            const recipe = findRecipeByPath(slot.path);
+            if (!recipe?.ingredients) return;
             
             recipe.ingredients.forEach(ingredient => {
                 if (!ingredient.name) return;
@@ -608,12 +674,12 @@ function updateShoppingList() {
                 if (!shoppingList[key]) {
                     shoppingList[key] = {
                         name: ingredient.name,
-                        quantity: quantityValue * meal.quantity || 0,
+                        quantity: quantityValue * slot.quantity || 0,
                         unit: getUnitFromQuantity(ingredient.quantity),
                         checked: false
                     };
                 } else {
-                    shoppingList[key].quantity += quantityValue * meal.quantity || 0;
+                    shoppingList[key].quantity += quantityValue * slot.quantity || 0;
                 }
             });
         });
@@ -962,24 +1028,6 @@ function loadSavedMenu() {
 
 // ========== ФУНКЦИИ ВЫБОРА БЛЮД ==========
 
-// Открыть селектор блюд
-function openMealSelector(day, mealType) {
-    currentSelection = {
-        day: parseInt(day),
-        mealType: mealType,
-        category: null,
-        subcategory: null,
-        dishIndex: null,
-        quantity: 1
-    };
-    
-    // Показать первый шаг - выбор категории
-    showSelectorStep('category');
-    renderCategories(mealType);
-    const modal = document.getElementById('meal-selector-modal');
-    if (modal) modal.style.display = 'block';
-}
-
 // Показать шаг селектора
 function showSelectorStep(step) {
     document.querySelectorAll('.selector-step').forEach(el => {
@@ -1221,32 +1269,37 @@ function confirmDishSelection() {
     }
     
     const day = currentSelection.day;
+    const slotId = currentSelection.slotId;
     const mealType = currentSelection.mealType;
     const portionQuantity = document.getElementById('portion-quantity');
     const quantity = parseInt(portionQuantity?.value) || 1;
     
-    // Сохранить выбор в меню
+    // Инициализируем день, если его нет
     if (!currentMenu[day]) {
-        currentMenu[day] = {};
+        currentMenu[day] = { slots: {} };
+    }
+    if (!currentMenu[day].slots) {
+        currentMenu[day].slots = {};
     }
     
-    const oldMeal = currentMenu[day][mealType];
+    const oldMeal = currentMenu[day].slots[slotId];
     const action = oldMeal ? 'изменено' : 'добавлено';
     
-    currentMenu[day][mealType] = {
-        path: [currentSelection.mealType, currentSelection.subcategory, currentSelection.dishIndex],
+    // Сохраняем в уникальный слот
+    currentMenu[day].slots[slotId] = {
+        path: [mealType, currentSelection.subcategory, currentSelection.dishIndex],
         quantity: quantity
     };
     
-    // Обновить интерфейс
+    // Обновляем интерфейс
     renderDayMenu(day);
     updateShoppingList();
     saveToLocalStorage();
     
-    // Закрыть модалку
+    // Закрываем модалку
     closeModalSelector();
     
-    const recipe = findRecipeByPath(currentMenu[day][mealType].path);
+    const recipe = findRecipeByPath(currentMenu[day].slots[slotId].path);
     if (recipe) {
         showNotification(`"${recipe.name}" ${action} (${quantity} порц${getPortionEnding(quantity)})`, 'success');
     }
@@ -1332,8 +1385,8 @@ function initSelectorEventListeners() {
     const clearSelection = document.getElementById('clear-selection');
     if (clearSelection) {
         clearSelection.addEventListener('click', () => {
-            if (currentSelection.day && currentSelection.mealType) {
-                deleteMeal(currentSelection.day, currentSelection.mealType);
+            if (currentSelection.day && currentSelection.slotId) {
+                deleteMeal(currentSelection.day, currentSelection.slotId);
                 closeModalSelector();
             }
         });
@@ -1419,6 +1472,3 @@ window.changeQuantity = changeQuantity;
 window.deleteMeal = deleteMeal;
 window.closeQuantityModal = closeQuantityModal;
 window.applyCustomQuantity = applyCustomQuantity;
-window.quickSelectMeal = function(day, mealType) {
-    openMealSelector(day, mealType);
-};
