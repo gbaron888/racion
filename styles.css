@@ -933,3 +933,142 @@ body {
     background: linear-gradient(135deg, var(--primary-gradient-start), var(--primary-gradient-end));
     color: white;
 }
+/* Улучшенные стили для мобильной версии селектора */
+@media (max-width: 768px) {
+    .selector-modal {
+        max-width: 95%;
+        max-height: 95vh;
+        margin: 2.5%;
+        padding: 15px;
+    }
+    
+    .modal-content {
+        padding: 20px;
+        max-height: 90vh;
+    }
+    
+    /* Критически важное исправление для списка блюд */
+    .dishes-list {
+        max-height: 60vh !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch; /* Плавный скролл на iOS */
+        padding-right: 10px; /* Место для скроллбара */
+    }
+    
+    /* Видимый скроллбар на мобильных */
+    .dishes-list::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    .dishes-list::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 3px;
+    }
+    
+    .dishes-list::-webkit-scrollbar-thumb {
+        background: var(--primary-gradient-start);
+        border-radius: 3px;
+    }
+    
+    .dish-card {
+        padding: 12px;
+        font-size: 14px;
+    }
+    
+    .dish-name {
+        font-size: 16px;
+    }
+    
+    .dish-cuisine {
+        font-size: 11px;
+    }
+    
+    .quantity-selector {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .quantity-input {
+        width: 100%;
+        font-size: 28px;
+        padding: 12px;
+    }
+    
+    .btn-back {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .dish-preview {
+        padding: 15px;
+    }
+    
+    .ingredients-preview {
+        max-height: 150px;
+        font-size: 13px;
+    }
+    
+    .ingredients-preview div {
+        padding: 3px 0;
+        font-size: 13px;
+    }
+    
+    /* Индикатор прокрутки для мобильных */
+    .scroll-indicator {
+        text-align: center;
+        color: #95a5a6;
+        font-size: 12px;
+        margin-top: 10px;
+        padding: 5px;
+        background: #f8f9fa;
+        border-radius: 4px;
+        display: block;
+    }
+}
+
+/* Адаптивные улучшения для всех устройств */
+.dishes-list {
+    position: relative;
+}
+
+.dishes-list:after {
+    content: "↑ Пролистайте вверх/вниз для просмотра всех блюд ↓";
+    display: block;
+    text-align: center;
+    color: #95a5a6;
+    font-size: 12px;
+    margin-top: 15px;
+    padding: 8px;
+    background: rgba(102, 126, 234, 0.05);
+    border-radius: 6px;
+}
+
+@media (min-width: 769px) {
+    .dishes-list:after {
+        display: none;
+    }
+}
+
+/* Улучшенная видимость пустых состояний */
+.empty-state {
+    padding: 30px 20px;
+    text-align: center;
+}
+
+.empty-state-icon {
+    font-size: 42px;
+    margin-bottom: 12px;
+}
+
+.empty-state-text {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #2c3e50;
+}
+
+.empty-state-subtext {
+    font-size: 14px;
+    color: #7f8c8d;
+    line-height: 1.5;
+}
