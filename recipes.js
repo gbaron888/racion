@@ -175,6 +175,16 @@ const recipesDatabase = {
         // Выпечка
         baking: [
             {
+                name: "⭐Блинчики с творогом",
+                cuisine: "russian",
+                ingredients: [
+                    { name: "Блинчики с творогом", quantity: "1 упаковка" },
+                ],
+                steps: [
+                ],
+                tips: 
+            },
+            {
                 name: "Блинчики с творогом",
                 cuisine: "russian",
                 ingredients: [
