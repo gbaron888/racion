@@ -26,10 +26,23 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initializeApp() {
+    // Проверка целостности базы рецептов
+    if (!recipesDatabase || Object.keys(recipesDatabase).length === 0) {
+        showNotification('Ошибка загрузки базы рецептов!', 'error');
+        console.error('База рецептов недоступна');
+        return;
+    }
+    
     setupEventListeners();
     generateDaysGrid();
     updateShoppingListDisplay();
     initSelectorEventListeners();
+    
+    // Отладочное сообщение для мобильных устройств
+    if (window.innerWidth <= 768) {
+        console.log('📱 Мобильное устройство обнаружено. Разрешение:', window.innerWidth);
+        console.log('📚 Доступные категории:', Object.keys(recipesDatabase));
+    }
 }
 
 function setupEventListeners() {
@@ -896,7 +909,6 @@ function showSelectorStep(step) {
     document.getElementById(stepId).classList.add('active');
 }
 
-// Рендер категорий для приема пищи
 function renderCategories(mealType) {
     const grid = document.getElementById('categories-grid');
     grid.innerHTML = '';
@@ -939,12 +951,24 @@ function renderCategories(mealType) {
     
     const categories = categoriesConfig[mealType] || [];
     
+    if (categories.length === 0) {
+        grid.innerHTML = `
+            <div class="empty-state" style="grid-column: 1 / -1;">
+                <div class="empty-state-icon">⚠️</div>
+                <div class="empty-state-text">Категории не найдены</div>
+                <div class="empty-state-subtext">Тип приема пищи: ${mealType}</div>
+            </div>
+        `;
+        console.error(`Не найдены категории для типа: ${mealType}`);
+        return;
+    }
+    
     categories.forEach(cat => {
         const card = document.createElement('div');
         card.className = 'category-card';
         card.innerHTML = `
-            <div>${cat.icon}</div>
-            <div>${cat.name}</div>
+            <div class="category-icon">${cat.icon}</div>
+            <div class="category-name">${cat.name}</div>
         `;
         card.addEventListener('click', () => {
             currentSelection.category = cat.id;
@@ -958,23 +982,44 @@ function renderCategories(mealType) {
     });
 }
 
-// Рендер списка блюд
+// Рендер списка блюд с улучшенной обработкой ошибок и мобильной поддержкой
 function renderDishes(mealType, subcategory) {
     const list = document.getElementById('dishes-list');
+    if (!list) {
+        console.error('Элемент #dishes-list не найден');
+        return;
+    }
+    
     list.innerHTML = '';
     
     const dishes = recipesDatabase[mealType]?.[subcategory] || [];
     
     if (dishes.length === 0) {
-        list.innerHTML = '<div class="empty-state"><div class="empty-state-text">Нет блюд в этой категории</div></div>';
+        list.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">🍽️</div>
+                <div class="empty-state-text">Нет блюд в этой категории</div>
+                <div class="empty-state-subtext">Попробуйте выбрать другую категорию</div>
+            </div>
+        `;
         return;
+    }
+    
+    // Добавить индикатор прокрутки для мобильных
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile && dishes.length > 3) {
+        const indicator = document.createElement('div');
+        indicator.className = 'scroll-indicator';
+        indicator.textContent = '↑ Пролистайте для просмотра всех блюд ↓';
+        list.appendChild(indicator);
     }
     
     dishes.forEach((dish, index) => {
         const card = document.createElement('div');
         card.className = 'dish-card';
+        card.setAttribute('data-index', index);
         card.innerHTML = `
-            <div>${getDishIcon(mealType)}</div>
+            <div class="dish-icon">${getDishIcon(mealType)}</div>
             <div class="dish-info">
                 <div class="dish-name">${dish.name}</div>
                 <div class="dish-cuisine">${getFullCuisineName(dish.cuisine)}</div>
@@ -986,8 +1031,28 @@ function renderDishes(mealType, subcategory) {
             showSelectorStep('quantity');
             renderQuantityStep();
         });
+        
+        // Добавить визуальную обратную связь при нажатии на мобильных
+        card.addEventListener('touchstart', () => {
+            card.style.backgroundColor = '#e0e7ff';
+        });
+        card.addEventListener('touchend', () => {
+            card.style.backgroundColor = '';
+        });
+        
         list.appendChild(card);
     });
+    
+    // Принудительно обновить скролл после рендера
+    setTimeout(() => {
+        list.scrollTop = 0;
+        console.log(`Отрендерено ${dishes.length} блюд для ${mealType}/${subcategory}`);
+    }, 10);
+    
+    if (window.innerWidth <= 768 && dishes.length > 2) {
+    const hint = document.querySelector('.mobile-scroll-hint');
+    if (hint) hint.style.display = 'block';
+    }
 }
 
 // Получить иконку для типа блюда
